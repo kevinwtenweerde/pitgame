@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>The pit game</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/webjars/bootstrap/4.2.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../../css/main.css"/>
+</head>
+<body>
+
+<div class="container">
+    <a th:href="@{/move/1}">text</a>
+
+    <div class="starter-template">
+        <h1>The pit game</h1>
+        <h2>
+            <span th:text="'Active player: ' + ${board.activePlayer.name}"></span>
+        </h2>
+        <!--Table-->
+        <table class="table table-bordered text-center">
+            <!--Table body-->
+            <tbody>
+            <tr>
+                <th colspan="7">Player 1</th>
+                <th th:text="${board.pits[13].amountOfStonesInPit}" rowspan="6"></th>
+            </tr>
+            <tr>
+                <th th:text="${board.pits[12].amountOfStonesInPit}" rowspan="6"></th>
+                <th><a th:href="@{/move/} + ${board.pits[0].pitId}" th:text="${board.pits[0].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[1].pitId}" th:text="${board.pits[1].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[2].pitId}" th:text="${board.pits[2].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[3].pitId}" th:text="${board.pits[3].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[4].pitId}" th:text="${board.pits[4].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[5].pitId}" th:text="${board.pits[5].amountOfStonesInPit}"></a></th>
+            </tr>
+            <tr>
+                <th><a th:href="@{/move/} + ${board.pits[6].pitId}" th:text="${board.pits[6].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[7].pitId}" th:text="${board.pits[7].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[8].pitId}" th:text="${board.pits[8].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[9].pitId}" th:text="${board.pits[9].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[10].pitId}" th:text="${board.pits[10].amountOfStonesInPit}"></a></th>
+                <th><a th:href="@{/move/} + ${board.pits[11].pitId}" th:text="${board.pits[11].amountOfStonesInPit}"></a></th>
+            </tr>
+            <tr></tr>
+            <tr>
+                <th colspan="7">Player 2</th>
+            </tr>
+            </tbody>
+            <!--Table body-->
+        </table>
+        <!--Table-->
+    </div>
+
+</div>
+<!-- /.container -->
+
+<script type="text/javascript" src="http://localhost:8080/webjars/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+</body>
+</html>

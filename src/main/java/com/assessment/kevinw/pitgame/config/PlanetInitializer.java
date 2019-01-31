@@ -77,6 +77,7 @@ public class PlanetInitializer implements ApplicationRunner {
 
         // Build the board
         Board board = Board.builder()
+                .boardId(1)
                 .pits(pitsToSet)
                 .players(playerRepository.findAll())
                 .activePlayer(neilArmstrong).build();

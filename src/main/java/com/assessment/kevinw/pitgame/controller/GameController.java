@@ -2,49 +2,49 @@ package com.assessment.kevinw.pitgame.controller;
 
 import com.assessment.kevinw.pitgame.PitgameApplication;
 import com.assessment.kevinw.pitgame.domain.Board;
-import com.assessment.kevinw.pitgame.domain.Game;
-import com.assessment.kevinw.pitgame.domain.Player;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
-import com.assessment.kevinw.pitgame.repository.GameRepository;
-import com.assessment.kevinw.pitgame.repository.PlayerRepository;
+import com.assessment.kevinw.pitgame.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class GameController {
-
-    @Autowired
-    private GameRepository gameRepository;
 
     @Autowired
     private BoardRepository boardRepository;
 
     @Autowired
-    private PlayerRepository playerRepository;
+    private BoardService boardService;
 
     @GetMapping("/")
-    public ResponseEntity<Iterable<Board>> getNewGame() {
-        return ResponseEntity.ok(boardRepository.findAll());
-    }
-
-    @GetMapping("/game")
-    public ResponseEntity<Iterable<Game>> getFullGameState() {
-        return ResponseEntity.ok(gameRepository.findAll());
+    public String getGame(Model model) {
+        Board board = boardRepository.findByBoardId(1);
+        model.addAttribute("board", board);
+        return "game";
     }
 
     @GetMapping("/board")
-    public ResponseEntity<Iterable<Board>> getFullBoardState() {
-        return ResponseEntity.ok(boardRepository.findAll());
+    public ResponseEntity<Board> getBoard() {
+        return ResponseEntity.ok(boardRepository.findByBoardId(1));
     }
 
-    @GetMapping("/player")
-    public ResponseEntity<Iterable<Player>> getAllPlayers() {
-        return ResponseEntity.ok(playerRepository.findAll());
+    @GetMapping("/move/{pitId}")
+    public String getBoard(Model model, @PathVariable(value = "pitId") final int pitId) {
+        Board board = boardRepository.findByBoardId(1);
+        board = boardService.processMove(pitId);
+        boardRepository.save(board);
+        model.addAttribute("board", board);
+        return "game";
     }
 
-    @GetMapping("new-game")
+    @GetMapping("/new-game")
     public void restartApplication() {
         PitgameApplication.restart();
     }

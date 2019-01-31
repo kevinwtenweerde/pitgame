@@ -30,6 +30,10 @@ public class Board {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Pit> pits;
 
+    // Internal id used to fetch the board from the datasource
+    @JsonIgnore
+    private int boardId;
+
     @OneToMany
     private List<Player> players;
 
