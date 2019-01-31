@@ -66,11 +66,9 @@ public class PlanetInitializer implements ApplicationRunner {
         //Initialize players and assign pits
         Player neilArmstrong = Player.builder()
                 .name("Neil Armstrong")
-//                .assignedBigPit(getCorrectPit(pitsToSet, playerOneBigPit))
                 .assignedBigPit(playerOneBigPit)
                 .assignedSmallPits(playerOneSmallPits).build();
         Player chrisHadfield = Player.builder()
-//                .assignedBigPit(getCorrectPit(pitsToSet, playerTwoBigPit))
                 .assignedBigPit(playerTwoBigPit)
                 .name("Chris Hadfield")
                 .assignedSmallPits(playerTwoSmallPits).build();
@@ -84,15 +82,5 @@ public class PlanetInitializer implements ApplicationRunner {
                 .activePlayer(neilArmstrong).build();
         boardRepository.save(board);
         log.trace("Board initialized with id: [{}].", board.getId());
-
-
-    }
-
-    private Pit getCorrectPit(List<Pit> pitsToSet, int pitIdToFind) {
-        // It is safe to do a get without checking because the pit was created before.
-        return pitsToSet.stream()
-                .filter(
-                        pit -> pitIdToFind == pit.getPitId()
-                ).findFirst().get();
     }
 }

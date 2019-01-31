@@ -7,7 +7,6 @@ import com.assessment.kevinw.pitgame.domain.Player;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.repository.GameRepository;
 import com.assessment.kevinw.pitgame.repository.PlayerRepository;
-import javafx.application.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
