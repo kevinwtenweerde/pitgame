@@ -23,4 +23,8 @@ public class Pit {
     private int pitId;
 
     private int amountOfStonesInPit;
+
+    public void addStone() {
+        this.amountOfStonesInPit++;
+    }
 }
