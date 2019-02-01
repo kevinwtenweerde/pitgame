@@ -3,7 +3,8 @@ package com.assessment.kevinw.pitgame.config;
 import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
-import com.assessment.kevinw.pitgame.exceptions.PlanetInitializationException;
+import com.assessment.kevinw.pitgame.exceptions.PitretrievalException;
+import com.assessment.kevinw.pitgame.helper.PitHelper;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.repository.PlayerRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -121,20 +122,13 @@ public class PlanetInitializer implements ApplicationRunner {
                         pitPair -> {
                             try {
                                 boardLayout.put(
-                                        getPitFromList(pitsToSet, pitPair.getKey()),
-                                        getPitFromList(pitsToSet, pitPair.getValue()));
-                            } catch (PlanetInitializationException pIex) {
+                                        PitHelper.getPitFromList(pitsToSet, pitPair.getKey()),
+                                        PitHelper.getPitFromList(pitsToSet, pitPair.getValue()));
+                            } catch (PitretrievalException pIex) {
                                 log.error("Could not start application: [{}]", pIex);
                             }
                         }
                 );
         return boardLayout;
-    }
-
-    private Pit getPitFromList(List<Pit> pitsToSet, Integer pitToGet) throws PlanetInitializationException {
-        return pitsToSet.stream().filter(
-                    pit -> pit.getPitId() == pitToGet)
-                .findFirst()
-                .orElseThrow(() -> new PlanetInitializationException("Layout could not be initialized because the pit id in the layout is not in the defined pits."));
     }
 }
