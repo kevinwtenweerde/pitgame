@@ -10,9 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class GameController {
@@ -37,8 +34,7 @@ public class GameController {
 
     @GetMapping("/move/{pitId}")
     public String getBoard(Model model, @PathVariable(value = "pitId") final int pitId) {
-        Board board = boardRepository.findByBoardId(1);
-        board = boardService.processMove(pitId);
+        Board board = boardService.processMove(pitId);
         boardRepository.save(board);
         model.addAttribute("board", board);
         return "game";

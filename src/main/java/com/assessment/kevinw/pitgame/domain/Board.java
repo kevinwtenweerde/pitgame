@@ -7,12 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Data
@@ -39,4 +41,9 @@ public class Board {
 
     @OneToOne
     private Player activePlayer;
+
+    private int lastPitHit;
+
+    @ElementCollection
+    private Map<Pit, Pit> boardLayout;
 }
