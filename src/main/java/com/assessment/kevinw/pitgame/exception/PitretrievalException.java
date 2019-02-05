@@ -1,4 +1,4 @@
-package com.assessment.kevinw.pitgame.exceptions;
+package com.assessment.kevinw.pitgame.exception;
 
 public class PitretrievalException extends Exception {
     public PitretrievalException(String message) {

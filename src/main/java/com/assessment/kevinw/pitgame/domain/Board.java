@@ -28,13 +28,13 @@ public class Board {
     @JsonIgnore
     private Long id;
 
-    // Pits are not created in the database, therefor we will cascade them
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Pit> pits;
-
     // Internal id used to fetch the board from the datasource
     @JsonIgnore
     private int boardId;
+
+    // Pits are not created in the database, therefor we will cascade them
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Pit> pits;
 
     @OneToMany
     private List<Player> players;
@@ -46,4 +46,12 @@ public class Board {
 
     @ElementCollection
     private Map<Pit, Pit> boardLayout;
+
+    public Player getInactivePlayer() {
+        return getPlayers().stream()
+                .filter(
+                        player -> getActivePlayer() != player
+                ).findFirst().get();
+    }
+
 }

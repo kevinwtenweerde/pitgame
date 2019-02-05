@@ -1,7 +1,7 @@
 package com.assessment.kevinw.pitgame.helper;
 
 import com.assessment.kevinw.pitgame.domain.Pit;
-import com.assessment.kevinw.pitgame.exceptions.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 
 import java.util.List;
 

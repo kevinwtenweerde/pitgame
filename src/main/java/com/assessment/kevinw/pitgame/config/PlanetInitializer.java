@@ -1,11 +1,13 @@
 package com.assessment.kevinw.pitgame.config;
 
 import com.assessment.kevinw.pitgame.domain.Board;
+import com.assessment.kevinw.pitgame.domain.Game;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
-import com.assessment.kevinw.pitgame.exceptions.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 import com.assessment.kevinw.pitgame.helper.PitHelper;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
+import com.assessment.kevinw.pitgame.repository.GameRepository;
 import com.assessment.kevinw.pitgame.repository.PlayerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class PlanetInitializer implements ApplicationRunner {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private GameRepository gameRepository;
 
     // Small pit set up
     @Value("${board.amount.of.small.pits}")
@@ -60,6 +65,7 @@ public class PlanetInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         // Initializing the board
+        // When adding more pits add them to the layout as well
         // Adding 1 to the pitId to start at one and amount of pits in application.properties correct
         List<Pit> pitsToSet = new ArrayList<>();
         IntStream.range(0, amountOfSmallPitsOnBoard)
@@ -96,6 +102,15 @@ public class PlanetInitializer implements ApplicationRunner {
                 .build();
         boardRepository.save(board);
         log.trace("Board initialized with id: [{}].", board.getId());
+
+        // Build the game
+        Game game = Game.builder()
+            .gameId(1)
+            .board(board)
+            .gameOver(false)
+            .build();
+        gameRepository.save(game);
+        log.trace("Game initialized with id: [{}].", game.getId());
     }
 
     private Map<Pit, Pit> getBoardLayout(List<Pit> pitsToSet) {
@@ -114,7 +129,13 @@ public class PlanetInitializer implements ApplicationRunner {
         layoutIds.put(3, 9);
         layoutIds.put(4, 10);
         layoutIds.put(5, 11);
-        layoutIds.put(7, 12);
+        layoutIds.put(6, 12);
+        layoutIds.put(7, 1);
+        layoutIds.put(8, 2);
+        layoutIds.put(9, 3);
+        layoutIds.put(10, 4);
+        layoutIds.put(11, 5);
+        layoutIds.put(12, 6);
 
         Map<Pit, Pit> boardLayout = new HashMap<>();
         layoutIds.entrySet().stream()

@@ -3,7 +3,7 @@ package com.assessment.kevinw.pitgame.service;
 import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
-import com.assessment.kevinw.pitgame.exceptions.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 import com.assessment.kevinw.pitgame.helper.PitHelper;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.stream.IntStream;
 
 import static com.assessment.kevinw.pitgame.helper.PitHelper.getPitFromList;
 
@@ -21,10 +19,17 @@ import static com.assessment.kevinw.pitgame.helper.PitHelper.getPitFromList;
 @Service
 public class BoardService {
 
+    // This is the board service.
+    // This service will manage everything that happens on the board
+    // It will not contain any logic for keeping the game state but just execute board movement.
+
     @Autowired
     private BoardRepository boardRepository;
 
-    public Board processMove(int pitId) {
+    // Variable to keep track of what pit got hit last
+    private int lastPitHit;
+
+    public Board processMove(int startingPitId) {
         Board activeBoard = boardRepository.findByBoardId(1);
         List<Pit> pits = activeBoard.getPits();
 
@@ -32,20 +37,17 @@ public class BoardService {
         Player activePlayer = activeBoard.getActivePlayer();
 
         // Retrieve selected pit
-        Pit selectedPit = getSelectedPit(pits, pitId);
+        Pit selectedPit = getSelectedPit(pits, startingPitId);
 
         // Retrieve values
-        List<Pit> pitsToMoveIn = getPitsToMoveIn(pits, activePlayer);
-        System.out.println(pitsToMoveIn);
         int amountOfPitsToMove = selectedPit.getAmountOfStonesInPit();
-        
+
         // Move stones
-        while (amountOfPitsToMove != 0) {
-            //todo: implement
-            amountOfPitsToMove--;
-        }
+        selectedPit.removeStones();
+        pits = moveStones(activePlayer, pits, amountOfPitsToMove, startingPitId);
 
         // Set new state of pits on board
+        activeBoard.setLastPitHit(lastPitHit);
         activeBoard.setPits(pits);
         return activeBoard;
     }
@@ -57,6 +59,30 @@ public class BoardService {
             log.error("A pit was selected to move that is not on the board [" + pitId + "]", pRex);
         }
         return null;
+    }
+
+    private List<Pit> moveStones(Player activePlayer, List<Pit> pits, int amountOfPitsToMove, int startingPitId) {
+        List<Pit> pitsToMoveIn = getPitsToMoveIn(pits, activePlayer);
+        for (Pit pit : pits) {
+            // Criteria to add a stone to a pit:
+            // 1. The pit is present in the list of pits to move in
+            // 2. The pit is not the pit that is selected
+            // 3. The pit is not before the selected pit (on the initial run)
+            if (amountOfPitsToMove != 0
+                    && pitsToMoveIn.contains(pit)
+                    && startingPitId != pit.getPitId()
+                    && startingPitId <= pit.getPitId()) {
+                pit.addStone();
+                amountOfPitsToMove--;
+                lastPitHit = pit.getPitId();
+            }
+        }
+        if (amountOfPitsToMove != 0) {
+            // The end of the list is reached but there are still pits to be distributed.
+            // The method to move the pits is called again, this time the starting pit is -1 so all pits are applicable
+            moveStones(activePlayer, pits, amountOfPitsToMove, -1);
+        }
+        return pits;
     }
 
     private List<Pit> getPitsToMoveIn(List<Pit> pits, Player activePlayer) {

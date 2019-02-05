@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>The pit game</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="http://localhost:8080/webjars/bootstrap/4.2.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="../../css/main.css"/>
+</head>
+<body>
+
+<div class="container">
+    <h1>The pit game</h1>
+    <h2>
+        <span th:text="'Winner: ' + ${board.activePlayer.name}"></span>
+    </h2>
+    <span>Final score:</span>
+    <span th:text="'${board.activePlayer.name}: ' + ${game.winnerScore}"></span>
+    <span th:text="'${board.inActivePlayer.name}: ' + ${game.loserScore}"></span>
+</div>
+<!-- /.container -->
+<script type="text/javascript" src="http://localhost:8080/webjars/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+</body>
+</html>

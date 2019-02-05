@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.stream.IntStream;
 
 @Entity
 @Data
@@ -26,5 +27,15 @@ public class Pit {
 
     public void addStone() {
         this.amountOfStonesInPit++;
+    }
+
+    public void removeStones() {
+        this.amountOfStonesInPit = 0;
+    }
+
+    public void addStones(int amountOfStonesToAdd) {
+        IntStream.range(0, amountOfStonesToAdd).forEach(
+                stone -> addStone()
+        );
     }
 }

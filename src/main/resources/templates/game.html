@@ -9,8 +9,6 @@
 <body>
 
 <div class="container">
-    <a th:href="@{/move/1}">text</a>
-
     <div class="starter-template">
         <h1>The pit game</h1>
         <h2>
@@ -20,36 +18,60 @@
         <table class="table table-bordered text-center">
             <!--Table body-->
             <tbody>
-            <tr>
-                <td colspan="7">Player 1</td>
-                <td th:text="${board.pits[13].amountOfStonesInPit}" rowspan="6"></td>
+            <tr class="player1">
+                <td colspan="7"><h2>Neil Armstrong</h2></td>
+                <td class="player2 big-pit" th:text="${board.pits[13].amountOfStonesInPit}" rowspan="6"></td>
             </tr>
-            <tr>
-                <td th:text="${board.pits[12].amountOfStonesInPit}" rowspan="6"></td>
-                <td><a th:href="@{/move/} + ${board.pits[0].pitId}" th:text="${board.pits[0].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[1].pitId}" th:text="${board.pits[1].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[2].pitId}" th:text="${board.pits[2].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[3].pitId}" th:text="${board.pits[3].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[4].pitId}" th:text="${board.pits[4].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[5].pitId}" th:text="${board.pits[5].amountOfStonesInPit}"></a></td>
-            </tr>
-            <tr>
-                <td><a th:href="@{/move/} + ${board.pits[6].pitId}" th:text="${board.pits[6].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[7].pitId}" th:text="${board.pits[7].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[8].pitId}" th:text="${board.pits[8].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[9].pitId}" th:text="${board.pits[9].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[10].pitId}" th:text="${board.pits[10].amountOfStonesInPit}"></a></td>
-                <td><a th:href="@{/move/} + ${board.pits[11].pitId}" th:text="${board.pits[11].amountOfStonesInPit}"></a></td>
-            </tr>
+            <div th:switch="${board.activePlayer.name}">
+                <div th:case="'Neil Armstrong'">
+                    <tr class="player1">
+                        <td class="big-pit" th:text="${board.pits[12].amountOfStonesInPit}" rowspan="6"></td>
+                        <td><a th:href="@{/move/} + ${board.pits[0].pitId}" th:text="${board.pits[0].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[1].pitId}" th:text="${board.pits[1].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[2].pitId}" th:text="${board.pits[2].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[3].pitId}" th:text="${board.pits[3].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[4].pitId}" th:text="${board.pits[4].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[5].pitId}" th:text="${board.pits[5].amountOfStonesInPit}"></a></td>
+                    </tr>
+                    <tr class="player2">
+                        <td><a class="disabled" href="#" th:text="${board.pits[6].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[7].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[8].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[9].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[10].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[11].amountOfStonesInPit}"></a></td>
+                    </tr>
+                </div>
+                <div th:case="'Chris Hadfield'">
+                    <tr class="player1">
+                        <td class="big-pit" th:text="${board.pits[12].amountOfStonesInPit}" rowspan="6"></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[0].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[1].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[2].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[3].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[4].amountOfStonesInPit}"></a></td>
+                        <td><a class="disabled" href="#" th:text="${board.pits[5].amountOfStonesInPit}"></a></td>
+                    </tr>
+                    <tr class="player2">
+                        <td><a th:href="@{/move/} + ${board.pits[6].pitId}" th:text="${board.pits[6].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[7].pitId}" th:text="${board.pits[7].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[8].pitId}" th:text="${board.pits[8].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[9].pitId}" th:text="${board.pits[9].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[10].pitId}" th:text="${board.pits[10].amountOfStonesInPit}"></a></td>
+                        <td><a th:href="@{/move/} + ${board.pits[11].pitId}" th:text="${board.pits[11].amountOfStonesInPit}"></a></td>
+                    </tr>
+                </div>
+            </div>
             <tr></tr>
             <tr>
-                <th colspan="7">Player 2</th>
+                <th class="player2" colspan="7"><h2>Chris Hadfield</h2></th>
             </tr>
             </tbody>
             <!--Table body-->
         </table>
         <!--Table-->
     </div>
+    <a href="/new-game" class="btn btn-outline-primary" role="button">New game</a>
 
 </div>
 <!-- /.container -->

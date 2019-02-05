@@ -1,0 +1,17 @@
+a.disabled {
+  color: gray;
+  pointer-events: none;
+}
+
+.player1 {
+    background-color: white;
+}
+
+.player2 {
+    background-color: #f2f2f2;
+}
+
+.big-pit {
+    vertical-align: middle !important;
+    font-size: 2em;
+}
