@@ -5,8 +5,9 @@ import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
 import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,13 +17,14 @@ import static com.assessment.kevinw.pitgame.helper.PitHelper.getPitFromList;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
     // This is the board service.
     // This service will manage everything that happens on the board
-    // It will not contain any logic for keeping the game state but just execute board movement.
+    // It will not contain any logic for keeping the game state but just execute board movement and capturing.
 
-    @Autowired
+    @NonNull
     private BoardRepository boardRepository;
 
     // Variable to keep track of what pit got hit last
@@ -44,11 +46,11 @@ public class BoardService {
 
         // Move stones
         selectedPit.removeStones();
-        pits = moveStones(activePlayer, pits, amountOfPitsToMove, startingPitId);
+        List<Pit> pitsAfterMoving = moveStones(activePlayer, pits, amountOfPitsToMove, startingPitId);
 
         // Set new state of pits on board
         activeBoard.setLastPitHit(lastPitHitId);
-        activeBoard.setPits(pits);
+        activeBoard.setPits(pitsAfterMoving);
 
         // Capture stones only when the last pit is no big pit
         if (lastPitHitId != activePlayer.getAssignedBigPit()) {

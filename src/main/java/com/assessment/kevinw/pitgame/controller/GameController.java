@@ -7,8 +7,9 @@ import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.service.BoardService;
 import com.assessment.kevinw.pitgame.service.GameService;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +17,27 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
 @Controller
+@AllArgsConstructor
 public class GameController {
 
-    //TODO: implement testing - fix restart after 1 time
+    //TODO: implement testing - fix restart after 1 time - read up on DI
 
-    @Autowired
+    /*
+    Field injection hides class dependencies. Constructor injection on the other hand exposes them. So it’s enough to look at class API.
+    Constructor injection doesn’t allow creation of circular dependencies.
+    Constructor injection uses standard Java features to inject dependencies. It is definitely much cleaner than field injection which involves using reflection twice under the hood:
+    Spring must use reflection to inject private field
+    Mockito (during the test) must use reflection to inject mocks into testing object
+    Developer would need to create awful non-default constructor with a lot of parameters for tightly coupled class. Nobody likes huge amount of parameters. So constructor injection naturally forces him to think about decoupling and reducing dependencies for the class. This is biggest advantage of constructor injection for me.
+    */
+
+    @NonNull
     private BoardRepository boardRepository;
 
-    @Autowired
+    @NonNull
     private BoardService boardService;
 
-    @Autowired
+    @NonNull
     private GameService gameService;
 
     @GetMapping("/")

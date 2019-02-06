@@ -8,8 +8,9 @@ import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.repository.GameRepository;
 import com.assessment.kevinw.pitgame.repository.PlayerRepository;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -26,15 +27,16 @@ import static com.assessment.kevinw.pitgame.helper.PitHelper.getPitFromList;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class PlanetInitializer implements ApplicationRunner {
 
-    @Autowired
+    @NonNull
     private BoardRepository boardRepository;
 
-    @Autowired
+    @NonNull
     private PlayerRepository playerRepository;
 
-    @Autowired
+    @NonNull
     private GameRepository gameRepository;
 
     // Small pit set up
