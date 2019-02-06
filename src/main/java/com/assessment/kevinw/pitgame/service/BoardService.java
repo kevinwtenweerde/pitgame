@@ -4,7 +4,6 @@ import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
 import com.assessment.kevinw.pitgame.exception.PitretrievalException;
-import com.assessment.kevinw.pitgame.helper.PitHelper;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,8 @@ public class BoardService {
     // Variable to keep track of what pit got hit last
     private int lastPitHit;
 
-    public Board processMove(int startingPitId) {
+    public Board processMove(int startingPitId) throws PitretrievalException {
+        // Retrieve game board and pits in current state
         Board activeBoard = boardRepository.findByBoardId(1);
         List<Pit> pits = activeBoard.getPits();
 
@@ -37,7 +37,7 @@ public class BoardService {
         Player activePlayer = activeBoard.getActivePlayer();
 
         // Retrieve selected pit
-        Pit selectedPit = getSelectedPit(pits, startingPitId);
+        Pit selectedPit = getPitFromList(pits, startingPitId);
 
         // Retrieve values
         int amountOfPitsToMove = selectedPit.getAmountOfStonesInPit();
@@ -49,19 +49,13 @@ public class BoardService {
         // Set new state of pits on board
         activeBoard.setLastPitHit(lastPitHit);
         activeBoard.setPits(pits);
+
+//        captureStones(activeBoard);
+
         return activeBoard;
     }
 
-    private Pit getSelectedPit(List<Pit> pits, int pitId) {
-        try {
-            return PitHelper.getPitFromList(pits, pitId);
-        } catch (PitretrievalException pRex) {
-            log.error("A pit was selected to move that is not on the board [" + pitId + "]", pRex);
-        }
-        return null;
-    }
-
-    private List<Pit> moveStones(Player activePlayer, List<Pit> pits, int amountOfPitsToMove, int startingPitId) {
+    private List<Pit> moveStones(Player activePlayer, List<Pit> pits, int amountOfPitsToMove, int startingPitId) throws PitretrievalException {
         List<Pit> pitsToMoveIn = getPitsToMoveIn(pits, activePlayer);
         for (Pit pit : pits) {
             // Criteria to add a stone to a pit:
@@ -85,23 +79,41 @@ public class BoardService {
         return pits;
     }
 
-    private List<Pit> getPitsToMoveIn(List<Pit> pits, Player activePlayer) {
+    private List<Pit> getPitsToMoveIn(List<Pit> pits, Player activePlayer) throws PitretrievalException {
         List<Pit> pitsToMoveIn = new ArrayList<>();
-        activePlayer.getAssignedSmallPits().stream()
-                .forEach(
-                        playerPitId -> {
-                            try {
-                                pitsToMoveIn.add(getPitFromList(pits, playerPitId));
-                            } catch (PitretrievalException pRex) {
-                                log.error("Player has a small pit assigned that is not on the board [" + playerPitId + "]", pRex);
-                            }
-                        }
-                );
-        try {
-            pitsToMoveIn.add(getPitFromList(pits, activePlayer.getAssignedBigPit()));
-        } catch (PitretrievalException pRex) {
-            log.error("Player has a big pit assigned that is not on the board [" + activePlayer.getAssignedBigPit() + "]", pRex);
+        List<Integer> pitIds = activePlayer.getAssignedSmallPits();
+        for (Integer playerPitId : pitIds) {
+            pitsToMoveIn.add(getPitFromList(pits, playerPitId));
         }
+        pitsToMoveIn.add(getPitFromList(pits, activePlayer.getAssignedBigPit()));
         return pitsToMoveIn;
+    }
+
+    private Board captureStones(Board board) throws PitretrievalException {
+        // This method will check what pit got hit last, if this pit is empty, all stones from this pit and the opposite pit will be put in the big pit.
+        int oppositePitId = getOppositePitId(board);
+        Pit lastPitHit = getPitFromList(board.getPits(), board.getLastPitHit());
+        Pit oppositePit = getPitFromList(board.getPits(), oppositePitId);
+        Pit activePlayerBigPit = getPitFromList(board.getPits(), board.getActivePlayer().getAssignedBigPit());
+
+        // When stealing both pits are emptied and all the stones are put in to the big pit of the player
+        // Criteria to steal pits
+        // 1. The last pit hit has exactly 1 stone in it
+        if (lastPitHit.getAmountOfStonesInPit() == 1) {
+            int spoilsOfWar = lastPitHit.getAmountOfStonesInPit() + oppositePit.getAmountOfStonesInPit();
+            lastPitHit.removeStones();
+            oppositePit.removeStones();
+            activePlayerBigPit.addStones(spoilsOfWar);
+        }
+        return board;
+    }
+
+    private int getOppositePitId(Board board) {
+        return board.getBoardLayout().entrySet().stream()
+                .filter(pitId -> pitId.getKey().getPitId() == board.getLastPitHit())
+                .findFirst()
+                .get()
+                .getValue()
+                .getPitId();
     }
 }

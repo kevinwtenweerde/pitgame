@@ -5,7 +5,6 @@ import com.assessment.kevinw.pitgame.domain.Game;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
 import com.assessment.kevinw.pitgame.exception.PitretrievalException;
-import com.assessment.kevinw.pitgame.helper.PitHelper;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.repository.GameRepository;
 import com.assessment.kevinw.pitgame.repository.PlayerRepository;
@@ -22,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
+
+import static com.assessment.kevinw.pitgame.helper.PitHelper.getPitFromList;
 
 @Component
 @Slf4j
@@ -105,10 +106,10 @@ public class PlanetInitializer implements ApplicationRunner {
 
         // Build the game
         Game game = Game.builder()
-            .gameId(1)
-            .board(board)
-            .gameOver(false)
-            .build();
+                .gameId(1)
+                .board(board)
+                .gameOver(false)
+                .build();
         gameRepository.save(game);
         log.trace("Game initialized with id: [{}].", game.getId());
     }
@@ -143,10 +144,11 @@ public class PlanetInitializer implements ApplicationRunner {
                         pitPair -> {
                             try {
                                 boardLayout.put(
-                                        PitHelper.getPitFromList(pitsToSet, pitPair.getKey()),
-                                        PitHelper.getPitFromList(pitsToSet, pitPair.getValue()));
+                                        getPitFromList(pitsToSet, pitPair.getKey()),
+                                        getPitFromList(pitsToSet, pitPair.getValue()));
                             } catch (PitretrievalException pIex) {
-                                log.error("Could not start application: [{}]", pIex);
+                                log.error("Could not start application because the pits declared in the layout do not exist on the board.", pIex);
+                                System.exit(1);
                             }
                         }
                 );

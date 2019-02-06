@@ -35,5 +35,7 @@ public class Game {
 
     private int loserScore;
 
+    @OneToOne
     private Player winner;
+
 }

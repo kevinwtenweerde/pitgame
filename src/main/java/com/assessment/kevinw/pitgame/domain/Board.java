@@ -51,7 +51,7 @@ public class Board {
         return getPlayers().stream()
                 .filter(
                         player -> getActivePlayer() != player
-                ).findFirst().get();
+                ).findFirst().orElse(null);
     }
 
 }
