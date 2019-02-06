@@ -107,7 +107,6 @@ public class PlanetInitializer implements ApplicationRunner {
         // Build the game
         Game game = Game.builder()
                 .gameId(1)
-                .board(board)
                 .gameOver(false)
                 .activePlayer(board.getActivePlayer())
                 .build();

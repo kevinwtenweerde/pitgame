@@ -33,7 +33,6 @@ public class GameService {
         // 1. If the active player does not switch, no stones are captured
         // 2. If the last pit on the players board is put in a big pit, the game should also end
         if (activeBoard.getLastPitHit() == activeBoard.getActivePlayer().getAssignedBigPit() && !gameEnded) {
-            activeGame.setBoard(activeBoard);
             log.debug("User hit assigned big pit, returning board");
             return activeGame;
         } else {
@@ -46,7 +45,6 @@ public class GameService {
             // If the player did not land in a big pit and the game did not end change active player
             activeGame.setActivePlayer(activeBoard.getInactivePlayer());
         }
-        activeGame.setBoard(activeBoard);
         return activeGame;
     }
 
@@ -86,7 +84,6 @@ public class GameService {
             activeGame.setWinnerScore(inActivePlayerScore);
             activeGame.setLoserScore(activePlayerScore);
         }
-        activeGame.setBoard(activeBoard);
         return activeGame;
     }
 

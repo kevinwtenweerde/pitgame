@@ -26,9 +26,6 @@ public class Game {
     @JsonIgnore
     private int gameId;
 
-    @OneToOne
-    private Board board;
-
     private boolean gameOver;
 
     private int winnerScore;
