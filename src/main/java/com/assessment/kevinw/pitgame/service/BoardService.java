@@ -26,7 +26,7 @@ public class BoardService {
     private BoardRepository boardRepository;
 
     // Variable to keep track of what pit got hit last
-    private int lastPitHit;
+    private int lastPitHitId;
 
     public Board processMove(int startingPitId) throws PitretrievalException {
         // Retrieve game board and pits in current state
@@ -47,11 +47,14 @@ public class BoardService {
         pits = moveStones(activePlayer, pits, amountOfPitsToMove, startingPitId);
 
         // Set new state of pits on board
-        activeBoard.setLastPitHit(lastPitHit);
+        activeBoard.setLastPitHit(lastPitHitId);
         activeBoard.setPits(pits);
 
-//        captureStones(activeBoard);
-
+        // Capture stones only when the last pit is no big pit
+        if (lastPitHitId != activePlayer.getAssignedBigPit()) {
+            captureStones(activeBoard);
+        }
+        boardRepository.save(activeBoard);
         return activeBoard;
     }
 
@@ -68,7 +71,7 @@ public class BoardService {
                     && startingPitId <= pit.getPitId()) {
                 pit.addStone();
                 amountOfPitsToMove--;
-                lastPitHit = pit.getPitId();
+                lastPitHitId = pit.getPitId();
             }
         }
         if (amountOfPitsToMove != 0) {
@@ -115,5 +118,12 @@ public class BoardService {
                 .get()
                 .getValue()
                 .getPitId();
+    }
+
+    public void updateActivePlayer(Player activePlayer) {
+        // Retrieve game board and pits in current state
+        Board activeBoard = boardRepository.findByBoardId(1);
+        activeBoard.setActivePlayer(activePlayer);
+        boardRepository.save(activeBoard);
     }
 }

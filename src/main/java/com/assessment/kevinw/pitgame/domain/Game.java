@@ -38,4 +38,8 @@ public class Game {
     @OneToOne
     private Player winner;
 
+    @OneToOne
+    private Player activePlayer;
+
+
 }

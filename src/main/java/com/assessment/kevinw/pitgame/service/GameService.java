@@ -37,13 +37,6 @@ public class GameService {
             log.debug("User hit assigned big pit, returning board");
             return activeGame;
         } else {
-
-            //             Check whether or not stones are captured and process them
-            captureStones(activeBoard);
-
-            // Check whether or not the game should end after capturing the stones
-            gameEnded = didGameEnd(activeBoard);
-
             if (gameEnded) {
                 // Gather the statistics and calculate final scores
                 activeGame = finalizeGame(activeBoard, activeGame);
@@ -51,38 +44,10 @@ public class GameService {
             }
 
             // If the player did not land in a big pit and the game did not end change active player
-            activeBoard.setActivePlayer(activeBoard.getInactivePlayer());
+            activeGame.setActivePlayer(activeBoard.getInactivePlayer());
         }
         activeGame.setBoard(activeBoard);
         return activeGame;
-    }
-
-    private Board captureStones(Board board) throws PitretrievalException {
-        // This method will check what pit got hit last, if this pit is empty, all stones from this pit and the opposite pit will be put in the big pit.
-        int oppositePitId = getOppositePitId(board);
-        Pit lastPitHit = getPitFromList(board.getPits(), board.getLastPitHit());
-        Pit oppositePit = getPitFromList(board.getPits(), oppositePitId);
-        Pit activePlayerBigPit = getPitFromList(board.getPits(), board.getActivePlayer().getAssignedBigPit());
-
-        // When stealing both pits are emptied and all the stones are put in to the big pit of the player
-        // Criteria to steal pits
-        // 1. The last pit hit has exactly 1 stone in it
-        if (lastPitHit.getAmountOfStonesInPit() == 1) {
-            int spoilsOfWar = lastPitHit.getAmountOfStonesInPit() + oppositePit.getAmountOfStonesInPit();
-            lastPitHit.removeStones();
-            oppositePit.removeStones();
-            activePlayerBigPit.addStones(spoilsOfWar);
-        }
-        return board;
-    }
-
-    private int getOppositePitId(Board board) {
-        return board.getBoardLayout().entrySet().stream()
-                .filter(pitId -> pitId.getKey().getPitId() == board.getLastPitHit())
-                .findFirst()
-                .get()
-                .getValue()
-                .getPitId();
     }
 
     private boolean didGameEnd(Board board) {

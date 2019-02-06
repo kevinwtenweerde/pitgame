@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class GameController {
 
+    //TODO: implement testing - fix restart after 1 time
+
     @Autowired
     private BoardRepository boardRepository;
 
@@ -44,14 +46,12 @@ public class GameController {
             log.error("There was an error while moving the stones along the board.", prEx);
             return "error";
         }
-        boardRepository.save(board);
-
         // Check game state
         Game gameState;
         try {
             gameState = gameService.checkGameState(board);
         } catch (PitretrievalException prEx) {
-            log.error("There was an error while determing the game state.", prEx);
+            log.error("There was an error while fetching the game state.", prEx);
             return "error";
         }
 
@@ -59,8 +59,7 @@ public class GameController {
             model.addAttribute("game", gameState);
             return "game-over";
         }
-        board = gameState.getBoard();
-        boardRepository.save(board);
+        boardService.updateActivePlayer(gameState.getActivePlayer());
         model.addAttribute("board", board);
         return "game";
     }

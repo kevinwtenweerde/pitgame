@@ -109,6 +109,7 @@ public class PlanetInitializer implements ApplicationRunner {
                 .gameId(1)
                 .board(board)
                 .gameOver(false)
+                .activePlayer(board.getActivePlayer())
                 .build();
         gameRepository.save(game);
         log.trace("Game initialized with id: [{}].", game.getId());
