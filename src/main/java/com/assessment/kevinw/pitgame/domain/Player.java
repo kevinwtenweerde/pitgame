@@ -29,4 +29,5 @@ public class Player {
     @ElementCollection
     private List<Integer> assignedSmallPits;
 
+    DirectionOfPlay directionOfPlay;
 }

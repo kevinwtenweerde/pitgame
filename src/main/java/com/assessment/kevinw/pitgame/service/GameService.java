@@ -4,7 +4,7 @@ import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.GameState;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
-import com.assessment.kevinw.pitgame.exception.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitRetrievalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class GameService {
     // This is the GameState service
     // This service will have all the logic to determine the game state
     // It is a layer that will be put on top of the board and then generate a game state
-    public GameState checkGameState(Board activeBoard) throws PitretrievalException {
+    public GameState checkGameState(Board activeBoard) throws PitRetrievalException {
         GameState activeGameState = new GameState();
 
         // Check whether or not the game ended after just moving stones on the board
@@ -53,7 +53,7 @@ public class GameService {
                 getTotalAmountOfStonesInPlayersSmallPits(board.getPits(), board.getActivePlayer()) == 0;
     }
 
-    private GameState createFinalGameState(Board activeBoard) throws PitretrievalException {
+    private GameState createFinalGameState(Board activeBoard) throws PitRetrievalException {
         GameState finalGameStateState = GameState.builder()
                 .gameOver(true)
                 .build();
@@ -72,7 +72,7 @@ public class GameService {
         return finalGameStateState;
     }
 
-    private int calculateFinalScore(List<Pit> pits, Player player) throws PitretrievalException {
+    private int calculateFinalScore(List<Pit> pits, Player player) throws PitRetrievalException {
         int smallPits = getTotalAmountOfStonesInPlayersSmallPits(pits, player);
         int bigPits = getPitFromList(pits, player.getAssignedBigPit()).getAmountOfStonesInPit();
         return smallPits + bigPits;
@@ -86,7 +86,7 @@ public class GameService {
                         pitId -> {
                             try {
                                 return getPitFromList(pits, pitId).getAmountOfStonesInPit();
-                            } catch (PitretrievalException prEx) {
+                            } catch (PitRetrievalException prEx) {
                                 log.error("The score of a pit that does not exist was requested: [" + pitId + "]. 0 will be returned.", prEx);
                                 return 0;
                             }

@@ -2,7 +2,7 @@ package com.assessment.kevinw.pitgame.controller;
 
 import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.GameState;
-import com.assessment.kevinw.pitgame.exception.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitRetrievalException;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.service.BoardService;
 import com.assessment.kevinw.pitgame.service.GameService;
@@ -45,7 +45,7 @@ public class GameController {
         Board board;
         try {
             board = boardService.processMove(pitId);
-        } catch (PitretrievalException prEx) {
+        } catch (PitRetrievalException prEx) {
             log.error("There was an error while moving the stones along the board.", prEx);
             return "game-crashed";
         } catch (IllegalArgumentException iaEx) {
@@ -56,7 +56,7 @@ public class GameController {
         GameState gameState;
         try {
             gameState = gameService.checkGameState(board);
-        } catch (PitretrievalException prEx) {
+        } catch (PitRetrievalException prEx) {
             log.error("There was an error while fetching the game state.", prEx);
             return "game-crashed";
         }
@@ -78,7 +78,7 @@ public class GameController {
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public String handleMethodArgumentTypeMismatch(
             MethodArgumentTypeMismatchException matmEx, WebRequest request, Model model) {
-        String errorMessage = "User entered [" + matmEx.getName() + "] while [" + matmEx.getRequiredType().getName() + "] is required.";
+        String errorMessage = "User entered [" + matmEx.getName() + "] while [int] is required.";
         log.debug("Invalid input recieved on []. Error is: {}", this.getClass(), errorMessage);
         return "input-error";
 

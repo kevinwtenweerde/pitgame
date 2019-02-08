@@ -1,9 +1,10 @@
 package com.assessment.kevinw.pitgame.config;
 
 import com.assessment.kevinw.pitgame.domain.Board;
+import com.assessment.kevinw.pitgame.domain.DirectionOfPlay;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
-import com.assessment.kevinw.pitgame.exception.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitRetrievalException;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.repository.PlayerRepository;
 import lombok.NonNull;
@@ -79,10 +80,12 @@ public class PlanetInitializer implements ApplicationRunner {
         Player neilArmstrong = Player.builder()
                 .name("Neil Armstrong")
                 .assignedBigPit(playerOneBigPit)
+                .directionOfPlay(DirectionOfPlay.LEFT)
                 .assignedSmallPits(playerOneSmallPits).build();
         Player chrisHadfield = Player.builder()
                 .assignedBigPit(playerTwoBigPit)
                 .name("Chris Hadfield")
+                .directionOfPlay(DirectionOfPlay.RIGHT)
                 .assignedSmallPits(playerTwoSmallPits).build();
         playerRepository.saveAll(Arrays.asList(neilArmstrong, chrisHadfield));
         log.trace("Players initialized with id: [{} : {}] and [{} : {}].", neilArmstrong.getName(), neilArmstrong.getId(), chrisHadfield.getName(), chrisHadfield.getId());
@@ -132,7 +135,7 @@ public class PlanetInitializer implements ApplicationRunner {
                 boardLayout.put(
                         getPitFromList(pitsToSet, key),
                         getPitFromList(pitsToSet, value));
-            } catch (PitretrievalException pIex) {
+            } catch (PitRetrievalException pIex) {
                 log.error("Could not start application because the pits declared in the layout do not exist on the board.", pIex);
                 System.exit(1);
             }

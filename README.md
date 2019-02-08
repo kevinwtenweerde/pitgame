@@ -18,7 +18,7 @@ The Pit game is a game powered by Spring Boot and Thymeleaf.
     <---- Direction of play
 # Rules
 - The starting player picks up all stones in a pit
-- The pits are distributed over the pits on the right hand side
+- The stones are distributed over the pits on the right hand side for player 1 and to the left hand side for player 2
 - Stones are also put in the own big pits
 - When the last stone that has to be distributed lands in the big pit, the player gets another go
 - Stones can be captured when the last stone that needs to be distributed ends up in an empty pit. The stones from the opposing pit and the last pit hit are being put in the big pit.

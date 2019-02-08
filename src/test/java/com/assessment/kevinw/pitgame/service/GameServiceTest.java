@@ -3,7 +3,7 @@ package com.assessment.kevinw.pitgame.service;
 import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.GameState;
 import com.assessment.kevinw.pitgame.domain.Pit;
-import com.assessment.kevinw.pitgame.exception.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitRetrievalException;
 import com.assessment.kevinw.pitgame.helper.PitHelper;
 import com.assessment.kevinw.pitgame.helpers.TestHelper;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
@@ -28,9 +28,9 @@ public class GameServiceTest {
     @Mock
     BoardRepository boardRepository;
 
-    Board board = new Board();
-    GameService gameService;
-    BoardService boardService;
+    private Board board = new Board();
+    private GameService gameService;
+    private BoardService boardService;
 
     @Mock
     PlayerRepository playerRepository;
@@ -52,14 +52,12 @@ public class GameServiceTest {
     }
 
     @Test
-    public void whenSmallPitsAreEmptyAndLastPitIsSmallPit_thenGameShouldEnd() throws PitretrievalException {
+    public void whenSmallPitsAreEmptyAndLastPitIsSmallPit_thenGameShouldEnd() throws PitRetrievalException {
         // This test will verify the game ending when the amount of stones run out and the last pit hit is a small one
 
         // Given
         List<Pit> pitsOnBoard = board.getPits();
-        pitsOnBoard.stream().forEach(
-                pit -> pit.removeStones()
-        );
+        pitsOnBoard.forEach(Pit::removeStones);
 
         // When
         GameState gameState = gameService.checkGameState(board);
@@ -68,15 +66,13 @@ public class GameServiceTest {
     }
 
     @Test
-    public void whenSmallPitsAreEmptyAndLastPitIsBigPit_thenGameShouldEnd() throws PitretrievalException {
+    public void whenSmallPitsAreEmptyAndLastPitIsBigPit_thenGameShouldEnd() throws PitRetrievalException {
         // This test will verify the game ending when the amount of stones run out and the last pit hit is a big one
 
         // Given
         List<Pit> pitsOnBoard = board.getPits();
         Pit lastPitBeforeBigPit = PitHelper.getPitFromList(pitsOnBoard, 6);
-        pitsOnBoard.stream().forEach(
-                pit -> pit.removeStones()
-        );
+        pitsOnBoard.forEach(Pit::removeStones);
         lastPitBeforeBigPit.addStone();
 
         // When
@@ -89,7 +85,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void whenPlayerRunsOutOfStones_thenGameShouldEnd() throws PitretrievalException {
+    public void whenPlayerRunsOutOfStones_thenGameShouldEnd() throws PitRetrievalException {
         // This test will verify the game ending when one of the players runs out of stones
         // Given
         List<Pit> pitsOnBoard = board.getPits();
@@ -105,7 +101,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void whenLastStoneIsCaptured_thenGameShouldEnd() throws PitretrievalException {
+    public void whenLastStoneIsCaptured_thenGameShouldEnd() throws PitRetrievalException {
         // Given
         List<Pit> pitsOnBoard = board.getPits();
          /*
@@ -116,17 +112,17 @@ public class GameServiceTest {
          | 7 | 8 | 9 | 10 | 11 | 12 |
          +---+---+---+----+----+----+
          All bottom pits except pit 8 will be empty, pit 8 will contain 1 stone.
-         Top pits will have 6 stones, except pit 1 and 2. Pit 1 will have 1 stone and pit 2 will have 0 stones.
-         When pit one is selected it will end up capturing the stones in pit 8. This will cause the inactive player to have 0 stones, and the game to end.
+         Top pits will have 6 stones, except pit 2 and 3. Pit 2 will have 0 stones and pit 3 will have 1 stone.
+         When pit 3 is selected it will end up capturing the stones in pit 8 because this is opposite of pit 8. This will cause the inactive player to have 0 stones, and the game to end.
          */
-        Pit pit1 = PitHelper.getPitFromList(pitsOnBoard, 1);
         Pit pit2 = PitHelper.getPitFromList(pitsOnBoard, 2);
+        Pit pit3 = PitHelper.getPitFromList(pitsOnBoard, 3);
         Pit pit8 = PitHelper.getPitFromList(pitsOnBoard, 8);
         pitsOnBoard.stream().filter(
                 pit -> board.getInactivePlayer().getAssignedSmallPits().contains(pit.getPitId())
         ).forEach(Pit::removeStones);
-        pit1.setAmountOfStonesInPit(1);
         pit2.setAmountOfStonesInPit(0);
+        pit3.setAmountOfStonesInPit(1);
         pit8.setAmountOfStonesInPit(1);
 
         // all stones in small pits
@@ -140,7 +136,7 @@ public class GameServiceTest {
 
 
         // When
-        boardService.processMove(1);
+        boardService.processMove(3);
         GameState gameState = gameService.checkGameState(board);
 
         // Then
@@ -150,7 +146,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void whenGameEnds_thenRemainingStonesInSmallPitsGoInBigPit() throws PitretrievalException {
+    public void whenGameEnds_thenRemainingStonesInSmallPitsGoInBigPit() throws PitRetrievalException {
         // Given
         List<Pit> pitsOnBoard = board.getPits();
         pitsOnBoard.stream().filter(
@@ -174,7 +170,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void whenGameEnds_playerWithMostStonesInBigPitWins() throws PitretrievalException {
+    public void whenGameEnds_playerWithMostStonesInBigPitWins() throws PitRetrievalException {
         // Given
         List<Pit> pitsOnBoard = board.getPits();
         Pit inactivePlayerBigPit = PitHelper.getPitFromList(pitsOnBoard, 102);
@@ -204,7 +200,7 @@ public class GameServiceTest {
         // When
         try {
             boardService.processMove(1);
-        } catch (PitretrievalException prEx) {
+        } catch (PitRetrievalException prEx) {
             exceptionThrown = true;
         }
 

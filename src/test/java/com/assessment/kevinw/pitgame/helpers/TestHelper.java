@@ -1,8 +1,9 @@
 package com.assessment.kevinw.pitgame.helpers;
 
+import com.assessment.kevinw.pitgame.domain.DirectionOfPlay;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
-import com.assessment.kevinw.pitgame.exception.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitRetrievalException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,18 +49,15 @@ public class TestHelper {
         layoutIds.put(12, 6);
 
         Map<Pit, Pit> boardLayout = new HashMap<>();
-        layoutIds.entrySet().stream()
-                .forEach(
-                        pitPair -> {
-                            try {
-                                boardLayout.put(
-                                        getPitFromList(pitsToSet, pitPair.getKey()),
-                                        getPitFromList(pitsToSet, pitPair.getValue()));
-                            } catch (PitretrievalException pIex) {
-                                System.exit(1);
-                            }
-                        }
-                );
+        layoutIds.forEach((key, value) -> {
+            try {
+                boardLayout.put(
+                        getPitFromList(pitsToSet, key),
+                        getPitFromList(pitsToSet, value));
+            } catch (PitRetrievalException pIex) {
+                System.exit(1);
+            }
+        });
         return boardLayout;
     }
 
@@ -67,10 +65,12 @@ public class TestHelper {
         Player testPlayer1 = Player.builder()
                 .name("testPlayer1")
                 .assignedBigPit(101)
-                .assignedSmallPits(new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6))).build();
+                .directionOfPlay(DirectionOfPlay.LEFT)
+                .assignedSmallPits(new ArrayList<>(Arrays.asList(6, 5, 4, 3, 2, 1))).build();
         Player testPlayer2 = Player.builder()
                 .assignedBigPit(102)
                 .name("testPlayer2")
+                .directionOfPlay(DirectionOfPlay.RIGHT)
                 .assignedSmallPits(new ArrayList<>(Arrays.asList(7, 8, 9, 10, 11, 12))).build();
         return Arrays.asList(testPlayer1, testPlayer2);
     }

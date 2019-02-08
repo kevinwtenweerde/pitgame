@@ -3,7 +3,7 @@ package com.assessment.kevinw.pitgame.service;
 import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
-import com.assessment.kevinw.pitgame.exception.PitretrievalException;
+import com.assessment.kevinw.pitgame.exception.PitRetrievalException;
 import com.assessment.kevinw.pitgame.helper.PitHelper;
 import com.assessment.kevinw.pitgame.helpers.TestHelper;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
@@ -65,7 +65,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void whenPitIsSelected_thenPitIsEmpty() throws PitretrievalException {
+    public void whenPitIsSelected_thenPitIsEmpty() throws PitRetrievalException {
         // Given
         int selectedPitId = 2;
         Pit selectedPit = PitHelper.getPitFromList(board.getPits(), selectedPitId);
@@ -78,7 +78,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void whenPitIsSelected_thenOtherPitsGetStones() throws PitretrievalException {
+    public void whenPitIsSelected_thenOtherPitsGetStones() throws PitRetrievalException {
         // Pit layout for player1 is 1-2-3-4-5-6-101 where 101 is the big pit.
         // When picking up the 6 stones from pit 1, all other pits, including big pit, should have an extra stone
 
@@ -101,7 +101,7 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void whenListOfPitsEndsWithStonesLeft_thenStartOverAtStart() throws PitretrievalException {
+    public void whenListOfPitsEndsWithStonesLeft_thenStartOverAtStart() throws PitRetrievalException {
         // Pit layout for player1 is 1-2-3-4-5-6-101 where 101 is the big pit.
         // When picking up the 6 stones from pit 1, all other pits, including big pit, should have an extra stone
         // When the layout is at the end but there are still stones left to move this will happen
@@ -125,14 +125,14 @@ public class BoardServiceTest {
     }
 
     @Test
-    public void whenOwnPitIsEmpty_thenCaptureStones() throws PitretrievalException {
-        // The opposite pit of of 1 is 7 as defined in the layout. The test will start at pit 2 with 6 stones which will end up in pit 1 with 0 stones.
-        // This will cause the stone capture to start and put 6 (pit 7) + 1 (pit 1) + 1 (passed big pit) = 8 stones in big pit 101.
+    public void whenOwnPitIsEmpty_thenCaptureStones() throws PitRetrievalException {
+        // The opposite pit of of 3 is 10 as defined in the layout. The test will start at pit 3 with 6 stones which will end up in pit 4 with 0 stones.
+        // This will cause the stone capture to start and put 6 (pit 10) + 1 (pit 3) + 1 (passed big pit) = 8 stones in big pit 101.
 
         // Given
-        int startingPitId = 2;
-        int ownPitThatShouldBeEmptyId = 1;
-        int oppositePidThatShouldBeRaidedId = 7;
+        int startingPitId = 3;
+        int ownPitThatShouldBeEmptyId = 4;
+        int oppositePidThatShouldBeRaidedId = 10;
         int bigPitToTestId = 101;
         Pit pitToEndUpIn = PitHelper.getPitFromList(board.getPits(), ownPitThatShouldBeEmptyId);
         Pit raidedPit = PitHelper.getPitFromList(board.getPits(), oppositePidThatShouldBeRaidedId);
@@ -148,8 +148,8 @@ public class BoardServiceTest {
         assertThat(bigPitToTest.getAmountOfStonesInPit(), is(8));
     }
 
-    @Test(expected = PitretrievalException.class)
-    public void whenNonExistingPidIsPassed_thenPREIsThrown() throws PitretrievalException {
+    @Test(expected = PitRetrievalException.class)
+    public void whenNonExistingPidIsPassed_thenPREIsThrown() throws PitRetrievalException {
         // Given
         board.getActivePlayer().getAssignedSmallPits().add(999);
 
