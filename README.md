@@ -9,13 +9,11 @@ The Pit game is a game powered by Spring Boot and Thymeleaf.
 - Each player has a big pit that is empty
 
 # Board layout
-  Direction of play ---->
-+---+---+---+----+----+----+
-| 1 | 2 | 3 | 4  | 5  | 6  |
-+---+---+---+----+----+----+
-| 7 | 8 | 9 | 10 | 11 | 12 |
-+---+---+---+----+----+----+
-    <---- Direction of play
+            <---- Direction of play
+player1 | 101 | 1 | 2 | 3 | 4 | 5 | 6 | |
+--- | --- | --- | --- | --- |--- |--- |--- |--- |
+player 2 || 7 | 8 | 9 | 10 | 11 | 12 | 102|
+            Direction of play ---->
 # Rules
 - The starting player picks up all stones in a pit
 - The stones are distributed over the pits on the right hand side for player 1 and to the left hand side for player 2
