@@ -27,8 +27,8 @@ import static org.mockito.Mockito.when;
 public class BoardServiceTest {
 
 
-    Board board = new Board();
-    BoardService boardService;
+    private Board board = new Board();
+    private BoardService boardService;
 
     @Mock
     PlayerRepository playerRepository;
@@ -149,11 +149,12 @@ public class BoardServiceTest {
     }
 
     @Test(expected = PitretrievalException.class)
-    public void whenPitIsRequestedThatDoesNotExist_thenPREIsThrown() throws PitretrievalException {
+    public void whenNonExistingPidIsPassed_thenPREIsThrown() throws PitretrievalException {
         // Given
         board.getActivePlayer().getAssignedSmallPits().add(999);
 
         // When
         boardService.processMove(1);
+
     }
 }

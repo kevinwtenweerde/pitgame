@@ -11,7 +11,6 @@ public class PitHelper {
     private PitHelper() {
     }
 
-
     public static Pit getPitFromList(List<Pit> pitsToSet, Integer pitToGet) throws PitretrievalException {
         return pitsToSet.stream().filter(
                 pit -> pit.getPitId() == pitToGet)

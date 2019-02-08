@@ -1,6 +1,5 @@
 package com.assessment.kevinw.pitgame.controller;
 
-import com.assessment.kevinw.pitgame.PitgameApplication;
 import com.assessment.kevinw.pitgame.domain.Board;
 import com.assessment.kevinw.pitgame.domain.GameState;
 import com.assessment.kevinw.pitgame.exception.PitretrievalException;
@@ -10,26 +9,19 @@ import com.assessment.kevinw.pitgame.service.GameService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.devtools.restart.Restarter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
 @Controller
 @AllArgsConstructor
 public class GameController {
-
-    //TODO: implement testing - fix restart after 1 time - read up on DI (see below)
-
-    /*
-    Field injection hides class dependencies. Constructor injection on the other hand exposes them. So it’s enough to look at class API.
-    Constructor injection doesn’t allow creation of circular dependencies.
-    Constructor injection uses standard Java features to inject dependencies. It is definitely much cleaner than field injection which involves using reflection twice under the hood:
-    Spring must use reflection to inject private field
-    Mockito (during the test) must use reflection to inject mocks into testing object
-    Developer would need to create awful non-default constructor with a lot of parameters for tightly coupled class. Nobody likes huge amount of parameters. So constructor injection naturally forces him to think about decoupling and reducing dependencies for the class. This is biggest advantage of constructor injection for me.
-    */
 
     @NonNull
     private BoardRepository boardRepository;
@@ -55,7 +47,10 @@ public class GameController {
             board = boardService.processMove(pitId);
         } catch (PitretrievalException prEx) {
             log.error("There was an error while moving the stones along the board.", prEx);
-            return "error";
+            return "game-crashed";
+        } catch (IllegalArgumentException iaEx) {
+            log.debug("User tried to empty a pit that does not belong to it");
+            return "input-error";
         }
         // Check game state
         GameState gameState;
@@ -63,12 +58,12 @@ public class GameController {
             gameState = gameService.checkGameState(board);
         } catch (PitretrievalException prEx) {
             log.error("There was an error while fetching the game state.", prEx);
-            return "error";
+            return "game-crashed";
         }
 
         if (gameState.isGameOver()) {
             model.addAttribute("game", gameState);
-            return "game-over";
+            return "game-finished";
         }
         boardService.updateActivePlayer(gameState.getActivePlayer());
         model.addAttribute("board", board);
@@ -77,6 +72,15 @@ public class GameController {
 
     @GetMapping("/new-game")
     public void restartApplication() {
-        PitgameApplication.restart();
+        Restarter.getInstance().restart();
+    }
+
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    public String handleMethodArgumentTypeMismatch(
+            MethodArgumentTypeMismatchException matmEx, WebRequest request, Model model) {
+        String errorMessage = "User entered [" + matmEx.getName() + "] while [" + matmEx.getRequiredType().getName() + "] is required.";
+        log.debug("Invalid input recieved on []. Error is: {}", this.getClass(), errorMessage);
+        return "input-error";
+
     }
 }

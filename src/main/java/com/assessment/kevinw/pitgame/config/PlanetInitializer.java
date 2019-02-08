@@ -33,7 +33,7 @@ public class PlanetInitializer implements ApplicationRunner {
 
     @NonNull
     private PlayerRepository playerRepository;
-    
+
     // Small pit set up
     @Value("${board.amount.of.small.pits}")
     private int amountOfSmallPitsOnBoard;
@@ -103,8 +103,8 @@ public class PlanetInitializer implements ApplicationRunner {
     }
 
     private Map<Pit, Pit> getBoardLayout(List<Pit> pitsToSet) {
-        /**
-         * Board layout will be:
+        /*
+          Board layout will be:
          +---+---+---+----+----+----+
          | 1 | 2 | 3 | 4  | 5  | 6  |
          +---+---+---+----+----+----+
@@ -127,19 +127,16 @@ public class PlanetInitializer implements ApplicationRunner {
         layoutIds.put(12, 6);
 
         Map<Pit, Pit> boardLayout = new HashMap<>();
-        layoutIds.entrySet().stream()
-                .forEach(
-                        pitPair -> {
-                            try {
-                                boardLayout.put(
-                                        getPitFromList(pitsToSet, pitPair.getKey()),
-                                        getPitFromList(pitsToSet, pitPair.getValue()));
-                            } catch (PitretrievalException pIex) {
-                                log.error("Could not start application because the pits declared in the layout do not exist on the board.", pIex);
-                                System.exit(1);
-                            }
-                        }
-                );
+        layoutIds.forEach((key, value) -> {
+            try {
+                boardLayout.put(
+                        getPitFromList(pitsToSet, key),
+                        getPitFromList(pitsToSet, value));
+            } catch (PitretrievalException pIex) {
+                log.error("Could not start application because the pits declared in the layout do not exist on the board.", pIex);
+                System.exit(1);
+            }
+        });
         return boardLayout;
     }
 }

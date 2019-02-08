@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.assessment.kevinw</groupId>
     <artifactId>pitgame</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>pitgame</name>
-    <description>Pit game</description>
+    <version>1.0.0</version>
+    <name>The Pit Game</name>
+    <description>Pit Game</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -70,6 +70,8 @@
             <version>2.1.2.RELEASE</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Test mock annotations -->
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>

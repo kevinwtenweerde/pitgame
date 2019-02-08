@@ -38,6 +38,10 @@ public class BoardService {
         // Retrieve active player
         Player activePlayer = activeBoard.getActivePlayer();
 
+        // Prevent moving of inactive players stones
+        if (!activePlayer.getAssignedSmallPits().contains(startingPitId)) {
+            throw new IllegalArgumentException("The pit value [" + startingPitId + "] is not a pit that belongs to the active user");
+        }
         // Retrieve selected pit
         Pit selectedPit = getPitFromList(pits, startingPitId);
 
@@ -113,11 +117,11 @@ public class BoardService {
         return board;
     }
 
-    private int getOppositePitId(Board board) {
+    private int getOppositePitId(Board board) throws PitretrievalException {
         return board.getBoardLayout().entrySet().stream()
                 .filter(pitId -> pitId.getKey().getPitId() == board.getLastPitHit())
                 .findFirst()
-                .get()
+                .orElseThrow(() -> new PitretrievalException("No opposite pit found for pit, please check the configuration and make sure all pits have opposites."))
                 .getValue()
                 .getPitId();
     }
