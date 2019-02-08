@@ -41,4 +41,4 @@ player 2 || 7 | 8 | 9 | 10 | 11 | 12 | 102|
 > During application initialization the properties will be validated so the game will only start in a valid state
 - The game state is a layer over the board that reads the board and determines the current game state
 - A restart function in the application will allow users to start over
-- > This really just restarts the spring application
+> This really just restarts the spring application
