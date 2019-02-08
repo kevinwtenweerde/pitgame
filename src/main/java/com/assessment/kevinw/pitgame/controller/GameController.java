@@ -2,7 +2,7 @@ package com.assessment.kevinw.pitgame.controller;
 
 import com.assessment.kevinw.pitgame.PitgameApplication;
 import com.assessment.kevinw.pitgame.domain.Board;
-import com.assessment.kevinw.pitgame.domain.Game;
+import com.assessment.kevinw.pitgame.domain.GameState;
 import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
 import com.assessment.kevinw.pitgame.service.BoardService;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @AllArgsConstructor
 public class GameController {
 
-    //TODO: implement testing - fix restart after 1 time - read up on DI
+    //TODO: implement testing - fix restart after 1 time - read up on DI (see below)
 
     /*
     Field injection hides class dependencies. Constructor injection on the other hand exposes them. So it’s enough to look at class API.
@@ -58,7 +58,7 @@ public class GameController {
             return "error";
         }
         // Check game state
-        Game gameState;
+        GameState gameState;
         try {
             gameState = gameService.checkGameState(board);
         } catch (PitretrievalException prEx) {

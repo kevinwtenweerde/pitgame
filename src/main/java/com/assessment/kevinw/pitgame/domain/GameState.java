@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Game {
+public class GameState {
 
     @Id
     @GeneratedValue

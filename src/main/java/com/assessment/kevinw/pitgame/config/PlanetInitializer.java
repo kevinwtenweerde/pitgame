@@ -1,12 +1,10 @@
 package com.assessment.kevinw.pitgame.config;
 
 import com.assessment.kevinw.pitgame.domain.Board;
-import com.assessment.kevinw.pitgame.domain.Game;
 import com.assessment.kevinw.pitgame.domain.Pit;
 import com.assessment.kevinw.pitgame.domain.Player;
 import com.assessment.kevinw.pitgame.exception.PitretrievalException;
 import com.assessment.kevinw.pitgame.repository.BoardRepository;
-import com.assessment.kevinw.pitgame.repository.GameRepository;
 import com.assessment.kevinw.pitgame.repository.PlayerRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +33,7 @@ public class PlanetInitializer implements ApplicationRunner {
 
     @NonNull
     private PlayerRepository playerRepository;
-
-    @NonNull
-    private GameRepository gameRepository;
-
+    
     // Small pit set up
     @Value("${board.amount.of.small.pits}")
     private int amountOfSmallPitsOnBoard;
@@ -105,15 +100,6 @@ public class PlanetInitializer implements ApplicationRunner {
                 .build();
         boardRepository.save(board);
         log.trace("Board initialized with id: [{}].", board.getId());
-
-        // Build the game
-        Game game = Game.builder()
-                .gameId(1)
-                .gameOver(false)
-                .activePlayer(board.getActivePlayer())
-                .build();
-        gameRepository.save(game);
-        log.trace("Game initialized with id: [{}].", game.getId());
     }
 
     private Map<Pit, Pit> getBoardLayout(List<Pit> pitsToSet) {
